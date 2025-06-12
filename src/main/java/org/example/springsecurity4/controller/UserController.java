@@ -1,7 +1,7 @@
-package org.example.springsecurity4;
+package org.example.springsecurity4.controller;
 
-import org.example.springBootCrud.model.User;
-import org.example.springBootCrud.service.UserService;
+import org.example.springsecurity4.model.User;
+import org.example.springsecurity4.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

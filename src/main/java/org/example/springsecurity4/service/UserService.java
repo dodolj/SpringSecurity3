@@ -1,7 +1,7 @@
-package org.example.springsecurity4;
+package org.example.springsecurity4.service;
 
-import org.example.springBootCrud.model.User;
-import org.example.springBootCrud.repository.UserRepository;
+import org.example.springsecurity4.model.User;
+import org.example.springsecurity4.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.example.springsecurity4;
+package org.example.springsecurity4.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
