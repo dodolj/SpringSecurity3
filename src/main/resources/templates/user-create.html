@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Create User</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 400px;
+                margin: 30px auto;
+                padding: 10px;
+            }
+            label {
+                display: block;
+                margin-top: 15px;
+                font-weight: bold;
+            }
+            input[type="text"], input[type="password"] {
+                width: 100%;
+                padding: 8px;
+                margin-top: 5px;
+                box-sizing: border-box;
+            }
+            .btn-group {
+                margin-top: 20px;
+            }
+            button {
+                padding: 8px 16px;
+                margin-right: 10px;
+                cursor: pointer;
+            }
+            a {
+                text-decoration: none;
+                color: #555;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Create User</h2>
+        <form th:action="@{/users/user-create}" th:object="${user}" method="post">
+            <label for="name">Name:</label>
+            <input type="text" id="name" th:field="*{name}" placeholder="..." required />
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" th:field="*{password}" placeholder="..." required />
+
+            <div class="btn-group">
+                <button type="submit">Create</button>
+                <a href="/users">Cancel</a>
+            </div>
+        </form>
+    </body>
+</html>

@@ -1,0 +1,103 @@
+### Maven ###
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/timing.properties
+*.mvn/
+**/pom.xml.tag
+**/pom.xml.releaseBackup
+**/pom.xml.versionsBackup
+**/pom.xml.next
+**/release.properties
+**/dependency-reduced-pom.xml
+.mvn/wrapper/maven-wrapper.properties
+settings.xml
+
+### IntelliJ IDEA ###
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+*.src/test
+*.src/HELP.md
+
+### Eclipse ###
+.classpath
+.project
+.settings/
+bin/
+.factorypath
+
+### NetBeans ###
+nbactions.xml
+nb-configuration.xml
+.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### Logs ###
+logs/
+*.log
+**/logs/test/
+
+### Test ###
+**/test-output/
+**/test-results/
+**/surefire-reports/
+**/failsafe-reports/
+*.jfr
+**/jacoco.exec
+**/jacoco-report/
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Environment ###
+.env
+*.env
+*.local.*
+config/local/
+
+### Docker ###
+docker-compose.override.yml
+docker-compose.*.yml
+!docker-compose.yml
+docker-compose-*
+**/.dockerignore
+**/Dockerfile
+**/docker-compose/
+*.jar
+*.war
+
+### Kubernetes ###
+.kube/
+*.kubeconfig
+
+### Backup ###
+*.bak
+*.swp
+*.swo
+*.old
+*.tmp
+*.temp
+*~
+~$*
+
+### Build ###
+build/
+
+### Application ###
+application-*.properties
+!application-default.properties
+
+### Database/Migrations ###
+**/flyway-*.sql
+!flyway.conf
+**/liquibase-*.sql
+!liquibase.conf
+
+### Others ###
+node_modules/
+*.class
