@@ -36,13 +36,13 @@
         </style>
     </head>
     <body>
-        <h2 th:text="'Edit user ' + ${user.name}">Edit user</h2>
+        <h2 th:text="'Edit user ' + ${user.username}">Edit user</h2>
         <form th:action="@{/users/user-update}" th:object="${user}" method="post">
             <input type="hidden" name="_method" value="PUT" />
             <input type="hidden" th:field="*{id}" />
 
             <label for="name">New name:</label>
-            <input type="text" id="name" th:field="*{name}" placeholder="..." required />
+            <input type="text" id="name" th:field="*{username}" placeholder="..." required />
 
             <label for="password">New password:</label>
             <input type="password" id="password" th:field="*{password}" placeholder="..." required />

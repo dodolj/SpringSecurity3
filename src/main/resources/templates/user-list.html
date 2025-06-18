@@ -52,7 +52,7 @@
                         <a th:href="@{/users/user-update/{id}(id=${user.id})}"
                            th:text="${user.id}" style="color: darkcyan;"></a>
                     </td>
-                    <td th:text="${user.name}"></td>
+                    <td th:text="${user.username}"></td>
                     <td th:text="${user.password}"></td>
                     <td style="padding: 0; border: 0 solid #ddd; width: auto;">
                         <form th:action="@{/users/user-delete/{id}(id=${user.id})}" method="post" style="display: inline;">
