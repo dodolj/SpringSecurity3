@@ -20,14 +20,14 @@ public class DataInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         User admin = User.builder()
-                .name("admin")
+                .username("admin")
                 .password(passwordEncoder.encode("admin"))
                 .role(Role.ADMIN)
                 .build();
         userService.saveUser(admin);
 
         User user = User.builder()
-                .name("user")
+                .username("user")
                 .password(passwordEncoder.encode("user"))
                 .role(Role.USER)
                 .build();

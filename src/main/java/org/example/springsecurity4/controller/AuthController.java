@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-@RequiredArgsConstructor
 public class AuthController {
 
     private final UserService userService;
+
+    public AuthController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/login")
     public String login() {

@@ -15,20 +15,23 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
 
+    public SecurityConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/", "/registration").permitAll()
-                    .anyRequest().authenticated())
-            .formLogin(form -> form
-                    .loginPage("/login")
-                    .permitAll())
-            .logout(LogoutConfigurer::permitAll);
+                        .requestMatchers("/", "/registration").permitAll()
+                        .anyRequest().authenticated())
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .permitAll())
+                .logout(LogoutConfigurer::permitAll);
         return http.build();
     }
 
@@ -39,8 +42,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }

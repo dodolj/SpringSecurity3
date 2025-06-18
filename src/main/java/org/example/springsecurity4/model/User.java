@@ -27,7 +27,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String name;
+    private String username;
 
     private String password;
 
@@ -58,16 +58,11 @@ public class User implements UserDetails {
     public String toString() {
         return String.format(
                 "User { id=%s, name=%s, role=%s }"
-                , id, name, role);
+                , id, username, role);
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(role.name()));
-    }
-
-    @Override
-    public String getUsername() {
-        return name;
+    public List<Role> getAuthorities() {
+        return Collections.singletonList(role);
     }
 }

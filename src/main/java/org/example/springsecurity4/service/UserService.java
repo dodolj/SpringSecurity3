@@ -1,23 +1,24 @@
 package org.example.springsecurity4.service;
 
+import lombok.RequiredArgsConstructor;
 import org.example.springsecurity4.model.User;
 import org.example.springsecurity4.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
+//todo @Transactional
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final PasswordEncoder passwordEncoder;
 
     public List<User> findAll() {
         return userRepository.findAll();
@@ -32,10 +33,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User findById(UUID id) {
-        return userRepository.findById(id).get();
-    }
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username).get();
+        return userRepository.findById(id).orElseThrow();
     }
     
     @Override
