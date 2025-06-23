@@ -37,7 +37,7 @@
     </head>
     <body>
         <h2>Create User</h2>
-        <form th:action="@{/users/user-create}" th:object="${user}" method="post">
+        <form th:action="@{/admin/user-create}" th:object="${user}" method="post">
             <label for="name">Name:</label>
             <input type="text" id="name" th:field="*{username}" placeholder="..." required />
 
@@ -46,7 +46,7 @@
 
             <div class="btn-group">
                 <button type="submit">Create</button>
-                <a href="/users">Cancel</a>
+                <a href="/admin">Cancel</a>
             </div>
         </form>
     </body>

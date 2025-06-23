@@ -25,13 +25,13 @@ public class DataInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         User admin = new User();
         admin.setUsername("admin");
-        admin.setPassword(passwordEncoder.encode("admin"));
+        admin.setPassword("admin");
         admin.setRole(Role.ADMIN);
         userService.saveUser(admin);
 
         User user = new User();
         user.setUsername("user");
-        user.setPassword(passwordEncoder.encode("user"));
+        user.setPassword("user");
         user.setRole(Role.USER);
         userService.saveUser(user);
     }

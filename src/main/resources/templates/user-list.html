@@ -47,15 +47,15 @@
                </tr>
             </thead>
             <tbody>
-                <tr th:each="user : ${users}">
+                <tr th:each="user : ${admin}">
                     <td>
-                        <a th:href="@{/users/user-update/{id}(id=${user.id})}"
+                        <a th:href="@{/admin/user-update/{id}(id=${user.id})}"
                            th:text="${user.id}" style="color: darkcyan;"></a>
                     </td>
                     <td th:text="${user.username}"></td>
                     <td th:text="${user.password}"></td>
                     <td style="padding: 0; border: 0 solid #ddd; width: auto;">
-                        <form th:action="@{/users/user-delete/{id}(id=${user.id})}" method="post" style="display: inline;">
+                        <form th:action="@{/admin/user-delete/{id}(id=${user.id})}" method="post" style="display: inline;">
                             <button type="submit"
                                     style="background: none; border: none; color: red; cursor: pointer; padding: 0; text-decoration: underline;">
                                 Delete
@@ -66,7 +66,7 @@
             </tbody>
         </table>
         <div class="btn-container">
-            <a href="/users/user-create">
+            <a href="/admin/user-create">
                 <button type="button">Create user</button>
             </a>
         </div>

@@ -37,7 +37,7 @@
     </head>
     <body>
         <h2 th:text="'Edit user ' + ${user.username}">Edit user</h2>
-        <form th:action="@{/users/user-update}" th:object="${user}" method="post">
+        <form th:action="@{/admin/user-update}" th:object="${user}" method="post">
             <input type="hidden" name="_method" value="PUT" />
             <input type="hidden" th:field="*{id}" />
 
@@ -49,7 +49,7 @@
 
             <div class="btn-group">
                 <button type="submit">Edit</button>
-                <a href="/users">Cancel</a>
+                <a href="/admin">Cancel</a>
             </div>
         </form>
     </body>
