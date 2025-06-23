@@ -19,9 +19,9 @@ import java.util.*;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class User implements UserDetails {
 
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -37,10 +37,7 @@ public class User implements UserDetails {
         return id;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
+    @Override
     public String getUsername() {
         return username;
     }

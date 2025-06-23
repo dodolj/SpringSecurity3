@@ -1,6 +1,5 @@
 package org.example.springsecurity4.service;
 
-import lombok.RequiredArgsConstructor;
 import org.example.springsecurity4.model.User;
 import org.example.springsecurity4.repository.UserRepository;
 import org.springframework.context.annotation.Lazy;
@@ -9,12 +8,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
-//todo @Transactional
+@Transactional(readOnly = true)
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -29,10 +29,12 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
+    @Transactional
     public void saveUser(User user) {
         userRepository.save(user);
     }
 
+    @Transactional
     public void deleteById(UUID id){
         userRepository.deleteById(id);
     }
@@ -51,6 +53,7 @@ public class UserService implements UserDetailsService {
         return userRepository.existsById(UUID.fromString(username));
     }
 
+    @Transactional
     public void registerUser(User user) {
         if (userExists(user.getUsername())) {
             throw new IllegalArgumentException("Username already exists");
