@@ -4,6 +4,7 @@ import org.example.springsecurity4.model.Role;
 import org.example.springsecurity4.model.User;
 import org.example.springsecurity4.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +17,11 @@ import java.util.UUID;
 public class AdminController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/user-list")
@@ -36,6 +39,7 @@ public class AdminController {
 
     @PostMapping("/user-create")
     public String createUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.saveUser(user);
         return "redirect:/admin/user-list";
     }
@@ -56,7 +60,7 @@ public class AdminController {
 
     @PutMapping("/user-update")
     public String updateUser(@ModelAttribute User user) {
-        userService.saveUser(user);
+        userService.updateUser(user);
         return "redirect:/admin/user-list";
     }
 }

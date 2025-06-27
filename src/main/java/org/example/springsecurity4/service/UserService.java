@@ -61,4 +61,13 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
+
+    @Transactional
+    public void updateUser(User user) {
+        User existing = userRepository.findById(user.getId()).orElseThrow();
+        existing.setUsername(user.getUsername());
+        existing.setPassword(passwordEncoder.encode(user.getPassword()));
+        existing.setRole(user.getRole());
+        userRepository.save(existing);
+    }
 }
