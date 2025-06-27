@@ -19,6 +19,7 @@ settings.xml
 *.ipr
 out/
 *.src/test
+*.src/HELP.md
 
 ### Eclipse ###
 .classpath

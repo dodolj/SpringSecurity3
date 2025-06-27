@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Edit User</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 400px;
+                margin: 30px auto;
+                padding: 10px;
+            }
+            label {
+                display: block;
+                margin-top: 15px;
+                font-weight: bold;
+            }
+            input[type="text"], input[type="password"] {
+                width: 100%;
+                padding: 8px;
+                margin-top: 5px;
+                box-sizing: border-box;
+            }
+            .btn-group {
+                margin-top: 20px;
+            }
+            button {
+                padding: 8px 16px;
+                margin-right: 10px;
+                cursor: pointer;
+            }
+            a {
+                text-decoration: none;
+                color: #555;
+            }
+        </style>
+    </head>
+    <body>
+        <h2 th:text="'Edit user ' + ${user.username}">Edit user</h2>
+        <form th:action="@{/admin/user-update}" th:object="${user}" method="post">
+            <input type="hidden" name="_method" value="PUT" />
+            <input type="hidden" th:field="*{id}" />
+
+            <label for="name">New name:</label>
+            <input type="text" id="name" th:field="*{username}" placeholder="..." required />
+
+            <label for="password">New password:</label>
+            <input type="password" id="password" th:field="*{password}" placeholder="..." required />
+
+            <label for="role">Role:</label>
+            <select id="role" th:field="*{role}">
+                <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
+            </select>
+
+            <div class="btn-group">
+                <button type="submit">Edit</button>
+                <a href="/admin/user-list">Cancel</a>
+            </div>
+        </form>
+    </body>
+</html>
