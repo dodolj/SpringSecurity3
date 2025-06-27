@@ -47,6 +47,11 @@
             <label for="password">New password:</label>
             <input type="password" id="password" th:field="*{password}" placeholder="..." required />
 
+            <label for="role">Role:</label>
+            <select id="role" th:field="*{role}">
+                <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
+            </select>
+
             <div class="btn-group">
                 <button type="submit">Edit</button>
                 <a href="/admin">Cancel</a>

@@ -16,10 +16,8 @@ import java.util.*;
 @Entity
 @Table(name = "users")
 @Getter
-@Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
 public class User implements UserDetails {
 
     @Id

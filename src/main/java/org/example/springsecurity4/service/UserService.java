@@ -50,7 +50,7 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean userExists(String username) {
-        return userRepository.existsById(UUID.fromString(username));
+        return userRepository.findByUsername(username).isPresent();
     }
 
     @Transactional
