@@ -1,6 +1,5 @@
 package org.example.springsecurity4.config;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -17,7 +16,7 @@ public class RoleBasedAuthenticationSuccessHandler extends SimpleUrlAuthenticati
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
+                                        Authentication authentication) throws IOException {
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
