@@ -3,7 +3,6 @@ package org.example.springsecurity4.controller;
 import org.example.springsecurity4.model.Role;
 import org.example.springsecurity4.model.User;
 import org.example.springsecurity4.service.UserService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +12,6 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class AdminController {
 
     private final UserService userService;
