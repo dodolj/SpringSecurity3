@@ -10,13 +10,16 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users",
+        indexes = @Index(name = "idx_users_username", columnList = "username", unique = true),
+        uniqueConstraints = @UniqueConstraint(name = "uk_users_username", columnNames = "username"))
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(nullable = false, unique = true)
     private String username;
 
     private String password;

@@ -69,4 +69,9 @@ public class UserService implements UserDetailsService {
         existing.setPassword(passwordEncoder.encode(user.getPassword()));
         existing.setRole(user.getRole());
     }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
 }
