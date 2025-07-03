@@ -1,6 +1,9 @@
 package org.example.springsecurity4.service;
 
+import org.example.springsecurity4.model.Role;
+import org.example.springsecurity4.model.RoleType;
 import org.example.springsecurity4.model.User;
+import org.example.springsecurity4.repository.RoleRepository;
 import org.example.springsecurity4.repository.UserRepository;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,30 +22,30 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
-    public UserService(UserRepository userRepository, @Lazy PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository,
+                       @Lazy PasswordEncoder passwordEncoder,
+                       RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
 
+    //region readOnly
     public List<User> findAll() {
         return userRepository.findAll();
-    }
-
-    @Transactional
-    public void saveUser(User user) {
-        userRepository.save(user);
-    }
-
-    @Transactional
-    public void deleteById(UUID id){
-        userRepository.deleteById(id);
     }
 
     public User findById(UUID id) {
         return userRepository.findById(id).orElseThrow();
     }
-    
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
@@ -52,13 +55,11 @@ public class UserService implements UserDetailsService {
     public boolean userExists(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
+    //endregion
 
+    //region @Transactional
     @Transactional
-    public void registerUser(User user) {
-        if (userExists(user.getUsername())) {
-            throw new IllegalArgumentException("Username already exists");
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public void saveUser(User user) {
         userRepository.save(user);
     }
 
@@ -67,11 +68,28 @@ public class UserService implements UserDetailsService {
         User existing = userRepository.findById(user.getId()).orElseThrow();
         existing.setUsername(user.getUsername());
         existing.setPassword(passwordEncoder.encode(user.getPassword()));
-        existing.setRole(user.getRole());
+        existing.setRoles(user.getRoles());
     }
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    @Transactional
+    public void registerUser(User user) {
+        if (userExists(user.getUsername())) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+            Role defaultRole = roleRepository.findByName(RoleType.USER)
+                    .orElseThrow(() -> new RuntimeException("Default role USER not found"));
+            user.setRoles(List.of(defaultRole));
+        }
+        userRepository.save(user);
     }
+
+    @Transactional
+    public void deleteById(UUID id){
+        userRepository.deleteById(id);
+    }
+    //endregion
 }

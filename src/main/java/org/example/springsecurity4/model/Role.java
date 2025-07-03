@@ -3,37 +3,36 @@ package org.example.springsecurity4.model;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
+@Table(name = "roles")
 public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     @Column(unique = true, nullable = false)
     @Enumerated(EnumType.STRING)
     private RoleType name;
 
     @ManyToMany(mappedBy = "roles")
-    private Set<User> users = new HashSet<>();
+    private List<User> users;
 
-    public enum RoleType {
-        ROLE_ADMIN, ROLE_USER;
+    public Role() {
     }
 
-    @Override
-    public String getAuthority() {
-        return name.toString();
+    public Role(RoleType name) {
     }
 
-    public Long getId() {
+    //region getter, setter, toString
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -45,11 +44,22 @@ public class Role implements GrantedAuthority {
         this.name = name;
     }
 
-    public Set<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    @Override
+    public String toString() {
+        return "ROLE_" + name.name();
+    }
+    //endregion
+
+    @Override
+    public String getAuthority() {
+        return name.name();
     }
 }

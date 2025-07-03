@@ -1,13 +1,16 @@
 package org.example.springsecurity4.controller;
 
 import org.example.springsecurity4.model.Role;
+import org.example.springsecurity4.model.RoleType;
 import org.example.springsecurity4.model.User;
+import org.example.springsecurity4.service.RoleService;
 import org.example.springsecurity4.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -16,10 +19,14 @@ public class AdminController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
 
-    public AdminController(UserService userService, PasswordEncoder passwordEncoder) {
+    public AdminController(UserService userService,
+                           PasswordEncoder passwordEncoder,
+                           RoleService roleService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.roleService = roleService;
     }
 
     @GetMapping("/user-list")
@@ -31,7 +38,7 @@ public class AdminController {
     @GetMapping("/user-create")
     public String createUserForm(Model model) {
         model.addAttribute("user", new User());
-        model.addAttribute("roles", Role.RoleType.values());
+        model.addAttribute("roles", RoleType.values());
         return "user-create";
     }
 
@@ -51,8 +58,10 @@ public class AdminController {
     @GetMapping("/user-update/{id}")
     public String updateUserForm(@PathVariable("id") UUID id, Model model) {
         User user = userService.findById(id);
+        List<Role> allRoles = roleService.findAllRoles();
+
         model.addAttribute("user", user);
-        model.addAttribute("roles", Role.RoleType.values());
+        model.addAttribute("roles", allRoles);
         return "user-update";
     }
 
