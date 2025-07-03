@@ -2,12 +2,12 @@ package org.example.springsecurity4.model;
 
 import jakarta.persistence.*;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users",
@@ -24,8 +24,15 @@ public class User implements UserDetails {
 
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"),
+            uniqueConstraints = @UniqueConstraint(
+                    name = "uk_users_roles",
+                    columnNames = {"user_id", "role_id"}))
+    private List<Role> roles = new HashSet<>();
+    //todo сделать list
 
     public UUID getId() {
         return id;
@@ -54,7 +61,7 @@ public class User implements UserDetails {
     }
 
     public Role getRole() {
-        return role;
+        return roles;
     }
 
     public void setRole(Role role) {
@@ -85,11 +92,13 @@ public class User implements UserDetails {
     public String toString() {
         return String.format(
                 "User { id=%s, name=%s, role=%s }"
-                , id, username, role);
+                , id, username, Set<Role> roles);
     }
 
     @Override
-    public List<Role> getAuthorities() {
-        return Collections.singletonList(role);
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+                .collect(Collectors.toList());
     }
 }

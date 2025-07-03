@@ -40,7 +40,7 @@ public class DataInitializer {
         User admin = new User();
         admin.setUsername("admin");
         admin.setPassword(passwordEncoder.encode("admin"));
-        admin.setRole(Role.ADMIN);
+        admin.setRole(Role.RoleType.ROLE_ADMIN);
         userService.saveUser(admin);
     }
 
@@ -48,7 +48,7 @@ public class DataInitializer {
         User user = new User();
         user.setUsername("user");
         user.setPassword(passwordEncoder.encode("user"));
-        user.setRole(Role.USER);
+        user.setRole(Role.RoleType.USER);
         userService.saveUser(user);
     }
 }

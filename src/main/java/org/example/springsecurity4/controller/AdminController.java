@@ -31,7 +31,7 @@ public class AdminController {
     @GetMapping("/user-create")
     public String createUserForm(Model model) {
         model.addAttribute("user", new User());
-        model.addAttribute("roles", Role.values());
+        model.addAttribute("roles", Role.RoleType.values());
         return "user-create";
     }
 
@@ -52,7 +52,7 @@ public class AdminController {
     public String updateUserForm(@PathVariable("id") UUID id, Model model) {
         User user = userService.findById(id);
         model.addAttribute("user", user);
-        model.addAttribute("roles", Role.values());
+        model.addAttribute("roles", Role.RoleType.values());
         return "user-update";
     }
 
