@@ -1,6 +1,6 @@
 package org.example.springsecurity4.model;
 
 public enum RoleType {
-    USER,
-    ADMIN;
+    ROLE_USER,
+    ROLE_ADMIN;
 }

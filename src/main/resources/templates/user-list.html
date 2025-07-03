@@ -59,7 +59,7 @@
                           user.password.substring(0, 2) +
                           '*'.repeat(user.password.length() - 4) +
                           user.password.substring(user.password.length() - 2) : user.password}"></td>
-                    <td th:text="${user.role}"></td>
+                    <td th:text="${#strings.listJoin(user.roles, ', ')}"></td>
                     <td style="padding: 0; border: 0 solid #ddd; width: auto;">
                         <form th:action="@{/admin/user-delete/{id}(id=${user.id})}" method="post" style="display: inline;">
                             <button type="submit"

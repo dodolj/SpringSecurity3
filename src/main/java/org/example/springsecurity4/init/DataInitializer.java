@@ -66,12 +66,12 @@ public class DataInitializer {
     }
 
     private void createAdminUser() {
-        User admin = createUser("admin", "admin", List.of(getRole(RoleType.ADMIN), getRole(RoleType.USER)));
+        User admin = createUser("admin", "admin", List.of(getRole(RoleType.ROLE_ADMIN), getRole(RoleType.ROLE_USER)));
         userService.saveUser(admin);
     }
 
     private void createRegularUser() {
-        User user = createUser("user", "user", List.of(getRole(RoleType.USER)));
+        User user = createUser("user", "user", List.of(getRole(RoleType.ROLE_USER)));
         userService.saveUser(user);
     }
 }
