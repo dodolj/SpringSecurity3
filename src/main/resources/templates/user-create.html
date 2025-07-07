@@ -36,6 +36,7 @@
         </style>
     </head>
     <body>
+    <div class="main-content">
         <h2>Create User</h2>
         <form th:action="@{/admin/user-create}" th:object="${user}" method="post">
             <label for="name">Name:</label>
@@ -54,5 +55,9 @@
                 <a href="/admin/user-list">Cancel</a>
             </div>
         </form>
+    </div>
+        <div class="overlay">
+            <div class="overlay-text">OUTDATED</div>
+        </div>
     </body>
 </html>

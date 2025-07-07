@@ -36,7 +36,9 @@
         </style>
     </head>
     <body>
-        <h2 th:text="'Edit user ' + ${user.username}">Edit user</h2>
+    <div class="main-content">
+
+    <h2 th:text="'Edit user ' + ${user.username}">Edit user</h2>
         <form th:action="@{/admin/user-update}" th:object="${user}" method="post">
             <input type="hidden" name="_method" value="PUT" />
             <input type="hidden" th:field="*{id}" />
@@ -57,5 +59,9 @@
                 <a href="/admin/user-list">Cancel</a>
             </div>
         </form>
+        </div>
+        <div class="overlay">
+            <div class="overlay-text">OUTDATED</div>
+        </div>
     </body>
 </html>

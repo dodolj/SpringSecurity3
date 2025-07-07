@@ -1,10 +1,16 @@
 package org.example.springsecurity4.model;
 
 import jakarta.persistence.*;
+import org.apache.logging.log4j.CloseableThreadContext;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -27,9 +33,17 @@ public class User implements UserDetails {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+            uniqueConstraints = @UniqueConstraint(
+                    name = "users_roles_unique",
+                    columnNames = {"user_id", "roles_id"}))
     private List<Role> roles;
+
+    @CreatedDate
+    private Instant createdAt;
+
+    //todo загуглить про аннотации за время (JPA аудит), (enable JPA auditing...)
+    @LastModifiedDate
+    private Instant updatedAt;
 
     //region getter and setter
     public UUID getId() {
@@ -64,6 +78,22 @@ public class User implements UserDetails {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
     //endregion
 

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -19,9 +18,6 @@ public class Role implements GrantedAuthority {
     @Column(unique = true, nullable = false)
     @Enumerated(EnumType.STRING)
     private RoleType name;
-
-    @ManyToMany(mappedBy = "roles")
-    private List<User> users;
 
     public Role() {
     }
@@ -45,14 +41,6 @@ public class Role implements GrantedAuthority {
 
     public void setName(RoleType name) {
         this.name = name;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
     }
     //endregion
 
