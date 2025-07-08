@@ -41,7 +41,6 @@ public class User implements UserDetails {
     @CreatedDate
     private Instant createdAt;
 
-    //todo загуглить про аннотации за время (JPA аудит), (enable JPA auditing...)
     @LastModifiedDate
     private Instant updatedAt;
 

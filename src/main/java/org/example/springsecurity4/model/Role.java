@@ -67,9 +67,7 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String toString() {
-        return String.format(
-                "Role { id=%s, name=%s }",
-                id, name);
+        return String.format("%s ", name);
     }
     //endregion
 

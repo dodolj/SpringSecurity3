@@ -1,207 +1,167 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <title>Admin panel</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-          crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .modal-backdrop {
+            z-index: 0;
+        }
+    </style>
 </head>
 <body>
-
-<nav class="navbar navbar-dark bg-dark">
-    <span class="navbar-text text-white ms-2">
-        <span th:text="${user.email}"></span> with roles:
-        <span th:text="${user.roles}"></span>
-    </span>
-    <a class="btn btn-outline-light ms-auto me-3" href="/logout">Logout</a>
-</nav>
-
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
-        <div class="col-md-2 bg-light vh-100 p-0">
-            <ul class="nav flex-column nav-pills mt-3">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">Admin</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">User</a>
-                </li>
-            </ul>
+        <div class="col-2 bg-light vh-100">
+            <div class="nav flex-column nav-pills mt-4">
+                <a class="nav-link active" th:href="@{/admin}">Admin</a>
+                <a class="nav-link" th:href="@{/user}">User</a>
+            </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="col-md-10">
-            <div class="p-4">
-                <h1>Admin panel</h1>
+        <!-- Main content -->
+        <div class="col-10">
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <h2>Admin panel</h2>
+                <span><b th:text="${currentUserEmail}"></b> with roles: <b th:text="${currentUserRoles}"></b></span>
+                <a class="btn btn-outline-dark" th:href="@{/logout}">Logout</a>
+            </div>
 
-                <ul class="nav nav-tabs mb-3">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">Users table</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/new">New User</a>
-                    </li>
-                </ul>
+            <!-- Tabs -->
+            <ul class="nav nav-tabs mt-3">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#users">Users table</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/create}">New User</a>
+                </li>
+            </ul>
 
-                <h5>All users</h5>
-                <table class="table table-bordered">
-                    <thead class="thead-light">
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Password</th>
-                        <th>Created At</th>
-                        <th>Edited At</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="u : ${users}">
-                        <td th:text="${u.id}"></td>
-                        <td th:text="${u.name}"></td>
-                        <td th:text="${u.password.length() > 4 ?
-                          user.password.substring(0, 2) +
-                          '*'.repeat(user.password.length() - 4) +
-                          user.password.substring(user.password.length() - 2) : user.password}"></td>
-                        <td th:text="${#dates.format(u.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
-                        <td th:text="${#dates.format(u.editedAt, 'yyyy-MM-dd HH:mm')}"></td>
-                        <td>
-                            <button
-                                    class="btn btn-info btn-sm btn-edit"
-                                    type="button"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#editModal"
-                                    data-id = "[(${u.id})]"
-                                    data-name = "[(${u.name})]"
-                                    data-createdat = "[(${#dates.format(u.createdAt, 'yyyy-MM-dd\'T\'HH:mm')})]"
-                                    data-editedat = "[(${#dates.format(u.editedAt, 'yyyy-MM-dd\'T\'HH:mm')})]"
-                            >Edit</button>
-                        </td>
-                        <td>
-                            <button
-                                    class="btn btn-danger btn-sm btn-delete"
-                                    type="button"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#deleteModal"
-                                    data-id="[(${u.id})]"
-                                    data-name="[(${u.name})]"
-                            >Delete</button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+            <!-- Users table -->
+            <div class="tab-content mt-3">
+                <div class="tab-pane fade show active" id="users">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Roles</th>
+                            <th>Created At</th>
+                            <th>Updated At</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user : ${users}">
+                            <td th:text="${user.id}"></td>
+                            <td th:text="${user.username}"></td>
+                            <td th:text="${user.roles}"></td>
+                            <td th:text="${user.createdAt}"></td>
+                            <td th:text="${user.updatedAt}"></td>
+                            <td>
+                                <button class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#editModal"
+                                        th:attr="data-id=${user.id},
+                                             data-username=${user.username},
+                                             data-createdat=${user.createdAt},
+                                             data-updatedat=${user.updatedAt}">
+                                    Edit
+                                </button>
 
+                            </td>
+                            <td>
+                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal"
+                                        th:attr="data-id=${user.id}, data-username=${user.username}">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Edit Modal -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+<div class="modal fade" id="editModal" tabindex="-1">
     <div class="modal-dialog">
-        <form id="editUserForm" method="post" th:action="@{/admin/edit}">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Edit User</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <form th:action="@{/admin/edit}" method="post" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="id" id="editId">
+                <input type="hidden" name="createdAt" id="editCreatedAt">
+                <input type="hidden" name="updatedAt" id="editUpdatedAt">
+
+                <div class="mb-3">
+                    <label for="editUsername" class="form-label">Username</label>
+                    <input type="text" name="username" id="editUsername" class="form-control" required>
                 </div>
-                <div class="modal-body">
-                    <input type="hidden" name="id" id="editId" />
 
-                    <div class="mb-3">
-                        <label for="editName" class="form-label">Name</label>
-                        <input type="text" name="name" id="editName" class="form-control" required />
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="editPassword" class="form-label">Password (leave blank to keep unchanged)</label>
-                        <input type="password" name="password" id="editPassword" class="form-control" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="editCreatedAt" class="form-label">Created At</label>
-                        <input type="datetime-local" id="editCreatedAt" class="form-control" disabled />
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="editEditedAt" class="form-label">Edited At</label>
-                        <input type="datetime-local" id="editEditedAt" class="form-control" disabled />
-                    </div>
-
+                <div class="mb-3">
+                    <label for="editPassword" class="form-label">New Password</label>
+                    <input type="password" name="password" id="editPassword" class="form-control">
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Save changes</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             </div>
         </form>
     </div>
 </div>
 
 <!-- Delete Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteModal" tabindex="-1">
     <div class="modal-dialog">
-        <form id="deleteUserForm" method="post" th:action="@{/admin/delete}">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Delete User</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to delete <strong id="deleteUserName"></strong>?</p>
-                    <input type="hidden" name="id" id="deleteId" />
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                </div>
+        <form th:action="@{/admin/delete}" method="post" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Delete user <strong id="deleteUsername"></strong>?</p>
+                <input type="hidden" name="id" id="deleteId">
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger">Delete</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             </div>
         </form>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // При открытии модалки редактирования — подставляем данные
-        const editModal = document.getElementById('editModal');
-        editModal.addEventListener('show.bs.modal', event => {
-            const button = event.relatedTarget;
+    const editModal = document.getElementById('editModal');
+    editModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
 
-            // Получаем данные из кнопки
-            const id = button.getAttribute('data-id');
-            const name = button.getAttribute('data-name');
-            const createdAt = button.getAttribute('data-createdat');
-            const editedAt = button.getAttribute('data-editedat');
+    document.getElementById('editId').value = button.getAttribute('data-id');
+    document.getElementById('editUsername').value = button.getAttribute('data-username');
+    document.getElementById('editPassword').value = ''; // очищаем поле
 
-            // Заполняем форму
-            document.getElementById('editId').value = id;
-            document.getElementById('editName').value = name;
-            document.getElementById('editPassword').value = '';
-            document.getElementById('editCreatedAt').value = createdAt || '';
-            document.getElementById('editEditedAt').value = editedAt || '';
-        });
+    // Если даты нужны (например, для передачи в контроллер)
+    document.getElementById('editCreatedAt').value = button.getAttribute('data-createdat');
+    document.getElementById('editUpdatedAt').value = button.getAttribute('data-updatedat');
+});
 
-        // При открытии модалки удаления — подставляем данные
-        const deleteModal = document.getElementById('deleteModal');
-        deleteModal.addEventListener('show.bs.modal', event => {
-            const button = event.relatedTarget;
 
-            const id = button.getAttribute('data-id');
-            const name = button.getAttribute('data-name');
-
-            document.getElementById('deleteId').value = id;
-            document.getElementById('deleteUserName').textContent = name;
-        });
+const deleteModal = document.getElementById('deleteModal');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        document.getElementById('deleteId').value = button.getAttribute('data-id');
+        document.getElementById('deleteUsername').innerText = button.getAttribute('data-username');
     });
 </script>
-
 </body>
 </html>
+

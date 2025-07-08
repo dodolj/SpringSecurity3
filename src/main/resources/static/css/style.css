@@ -36,3 +36,25 @@ html, body {
     pointer-events: none;
     user-select: none;
 }
+
+.outdated-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.85); /* плотное затемнение */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    pointer-events: all;
+}
+
+.outdated-overlay h1 {
+    color: red;
+    font-size: 4rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+}

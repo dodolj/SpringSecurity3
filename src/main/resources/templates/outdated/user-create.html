@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <title>Edit User</title>
+        <title>Create User</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -34,19 +34,16 @@
                 color: #555;
             }
         </style>
+        <link rel="stylesheet" th:href="@{/css/style.css}">
     </head>
     <body>
     <div class="main-content">
-
-    <h2 th:text="'Edit user ' + ${user.username}">Edit user</h2>
-        <form th:action="@{/admin/user-update}" th:object="${user}" method="post">
-            <input type="hidden" name="_method" value="PUT" />
-            <input type="hidden" th:field="*{id}" />
-
-            <label for="name">New name:</label>
+        <h2>Create User</h2>
+        <form th:action="@{/admin/user-create}" th:object="${user}" method="post">
+            <label for="name">Name:</label>
             <input type="text" id="name" th:field="*{username}" placeholder="..." required />
 
-            <label for="password">New password:</label>
+            <label for="password">Password:</label>
             <input type="password" id="password" th:field="*{password}" placeholder="..." required />
 
             <label for="role">Role:</label>
@@ -55,13 +52,13 @@
             </select>
 
             <div class="btn-group">
-                <button type="submit">Edit</button>
+                <button type="submit">Create</button>
                 <a href="/admin/user-list">Cancel</a>
             </div>
         </form>
-        </div>
-        <div class="overlay">
-            <div class="overlay-text">OUTDATED</div>
-        </div>
+    </div>
+    <div class="outdated-overlay">
+        <h1>OUTDATED</h1>
+    </div>
     </body>
 </html>

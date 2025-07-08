@@ -22,9 +22,9 @@ public class RoleBasedAuthenticationSuccessHandler extends SimpleUrlAuthenticati
 
         if (authorities.stream().anyMatch(a -> a
                 .getAuthority().equals("ROLE_ADMIN"))) {
-            getRedirectStrategy().sendRedirect(request, response, "/admin/user-list");
+            getRedirectStrategy().sendRedirect(request, response, "/admin");
         } else {
-            getRedirectStrategy().sendRedirect(request, response, "/users/user-current-user");
+            getRedirectStrategy().sendRedirect(request, response, "/user");
         }
     }
 }

@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -55,6 +57,19 @@ public class UserService implements UserDetailsService {
     public boolean userExists(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
+
+    public String getRolesAsString(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isEmpty()) {
+            return "";
+        }
+        User user = userOptional.get();
+        return user.getRoles().stream()
+                .map(role -> role.getName().name())
+                .collect(Collectors.joining(", "));
+
+    }
+
     //endregion
 
     //region @Transactional

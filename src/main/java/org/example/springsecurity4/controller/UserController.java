@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/users")
 public class UserController {
 
-    @GetMapping("/user-current-user")
+    @GetMapping("/users")
     public String userPage() {
-        return "user-current-user";
+        return "user";
     }
 }
