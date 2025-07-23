@@ -26,4 +26,8 @@ public class RoleService {
     public Optional<Role> findById(UUID id) {
         return roleRepository.findById(id);
     }
+
+    public List<Role> findAllById(List<UUID> roleIds) {
+        return roleRepository.findAllById(roleIds);
+    }
 }

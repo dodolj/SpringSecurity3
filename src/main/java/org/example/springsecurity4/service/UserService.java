@@ -79,12 +79,24 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void updateUser(User user) {
-        User existing = userRepository.findById(user.getId()).orElseThrow();
-        existing.setUsername(user.getUsername());
-        existing.setPassword(passwordEncoder.encode(user.getPassword()));
-        existing.setRoles(user.getRoles());
+    public void updateUser(User updatedUser) {
+        User user = userRepository.findById(updatedUser.getId())
+                .orElseThrow();
+        user.setUsername(updatedUser.getUsername());
+
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
+
+        List<Role> roles = roleRepository.findAllById(
+                updatedUser.getRoles().stream()
+                        .map(Role::getId)
+                        .toList()
+        );
+        user.setRoles(roles);
+        userRepository.save(user);
     }
+
 
     @Transactional
     public void registerUser(User user) {

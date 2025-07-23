@@ -76,12 +76,13 @@ public class AdminController {
         model.addAttribute("users", userService.findAll());
         model.addAttribute("currentUserEmail", principal.getName());
         model.addAttribute("currentUserRoles", userService.getRolesAsString(principal.getName()));
+        model.addAttribute("allRoles", roleService.findAllRoles());
         return "admin";
     }
 
     @PostMapping("/admin/edit")
     public String editUser(@ModelAttribute User user) {
-        userService.saveUser(user);
+        userService.updateUser(user);
         return "redirect:/admin";
     }
 
