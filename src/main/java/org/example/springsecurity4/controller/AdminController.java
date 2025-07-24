@@ -2,6 +2,7 @@ package org.example.springsecurity4.controller;
 
 import org.example.springsecurity4.model.User;
 import org.example.springsecurity4.service.RoleService;
+import org.example.springsecurity4.service.RoleServiceApi;
 import org.example.springsecurity4.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -18,11 +19,11 @@ public class AdminController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-    private final RoleService roleService;
+    private final RoleServiceApi roleService;
 
     public AdminController(UserService userService,
                            PasswordEncoder passwordEncoder,
-                           RoleService roleService) {
+                           RoleServiceApi roleService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;

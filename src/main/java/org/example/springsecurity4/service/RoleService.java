@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
-public class RoleService {
+public class RoleService implements RoleServiceApi {
 
     private final RoleRepository roleRepository;
 
@@ -19,14 +19,17 @@ public class RoleService {
         this.roleRepository = roleRepository;
     }
 
+    @Override
     public List<Role> findAllRoles() {
         return roleRepository.findAll();
     }
 
+    @Override
     public Optional<Role> findById(UUID id) {
         return roleRepository.findById(id);
     }
 
+    @Override
     public List<Role> findAllById(List<UUID> roleIds) {
         return roleRepository.findAllById(roleIds);
     }

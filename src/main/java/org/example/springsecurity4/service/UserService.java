@@ -83,7 +83,6 @@ public class UserService implements UserDetailsService {
     public void updateUser(User updatedUser, List<String> selectedRoles) {
         User user = userRepository.findById(updatedUser.getId())
                 .orElseThrow();
-
         user.setUsername(updatedUser.getUsername());
 
         if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
