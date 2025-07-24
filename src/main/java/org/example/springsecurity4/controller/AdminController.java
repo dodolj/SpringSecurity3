@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -81,8 +82,10 @@ public class AdminController {
     }
 
     @PostMapping("/admin/edit")
-    public String editUser(@ModelAttribute User user) {
-        userService.updateUser(user);
+    public String editUser(
+            @ModelAttribute User user,
+            @RequestParam(required = false) List<String> selectedRoles) {
+        userService.updateUser(user, selectedRoles);
         return "redirect:/admin";
     }
 

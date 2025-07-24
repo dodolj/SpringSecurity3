@@ -11,10 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "users",
@@ -36,7 +33,7 @@ public class User implements UserDetails {
             uniqueConstraints = @UniqueConstraint(
                     name = "users_roles_unique",
                     columnNames = {"user_id", "roles_id"}))
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 
     @CreatedDate
     private Instant createdAt;

@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -79,23 +80,26 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void updateUser(User updatedUser) {
+    public void updateUser(User updatedUser, List<String> selectedRoles) {
         User user = userRepository.findById(updatedUser.getId())
                 .orElseThrow();
+
         user.setUsername(updatedUser.getUsername());
 
         if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
             user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         }
 
-        List<Role> roles = roleRepository.findAllById(
-                updatedUser.getRoles().stream()
-                        .map(Role::getId)
-                        .toList()
-        );
-        user.setRoles(roles);
+        if (selectedRoles != null && !selectedRoles.isEmpty()) {
+            List<Role> roles = roleRepository.findByNameIn(selectedRoles);
+            user.setRoles(roles);
+        } else {
+            user.setRoles(Collections.emptyList());
+        }
+
         userRepository.save(user);
     }
+
 
 
     @Transactional
