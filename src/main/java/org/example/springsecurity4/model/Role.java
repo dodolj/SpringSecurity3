@@ -54,8 +54,8 @@ public class Role implements GrantedAuthority {
         Class<?> thisEffectiveClass = this instanceof HibernateProxy proxy
                 ? proxy.getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        User user = (User) o;
-        return getId() != null && Objects.equals(getId(), user.getId());
+        Role role = (Role) o;
+        return getId() != null && Objects.equals(getId(), role.getId());
     }
 
     @Override

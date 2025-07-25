@@ -2,9 +2,12 @@ package org.example.springsecurity4.model;
 
 import jakarta.persistence.*;
 import org.apache.logging.log4j.CloseableThreadContext;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,6 +20,7 @@ import java.util.*;
 @Table(name = "users",
         indexes = @Index(name = "idx_users_username", columnList = "username", unique = true),
         uniqueConstraints = @UniqueConstraint(name = "uk_users_username", columnNames = "username"))
+@EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails {
 
     @Id
@@ -36,9 +40,13 @@ public class User implements UserDetails {
     private List<Role> roles = new ArrayList<>();
 
     @CreatedDate
+    @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @CreationTimestamp
     private Instant createdAt;
 
     @LastModifiedDate
+    @Column(name = "updated_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @UpdateTimestamp
     private Instant updatedAt;
 
     //region getter and setter

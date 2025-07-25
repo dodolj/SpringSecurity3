@@ -13,10 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,7 +72,8 @@ public class UserService implements UserDetailsService {
 
     //region @Transactional
     @Transactional
-    public void saveUser(User user) {
+    public void saveUser(User user, List<UUID> selectedRolesIds) {
+        user.setRoles(new ArrayList<>(roleRepository.findAllById(selectedRolesIds)));
         userRepository.save(user);
     }
 

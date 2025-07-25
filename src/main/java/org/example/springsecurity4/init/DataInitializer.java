@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class DataInitializer {
@@ -67,11 +68,13 @@ public class DataInitializer {
 
     private void createAdminUser() {
         User admin = createUser("admin", "admin", List.of(getRole(RoleType.ROLE_ADMIN), getRole(RoleType.ROLE_USER)));
-        userService.saveUser(admin);
+        List<UUID> selectedRoles = List.of(getRole(RoleType.ROLE_USER).getId(), getRole(RoleType.ROLE_ADMIN).getId());
+        userService.saveUser(admin, selectedRoles);
     }
 
     private void createRegularUser() {
         User user = createUser("user", "user", List.of(getRole(RoleType.ROLE_USER)));
-        userService.saveUser(user);
+        List<UUID> selectedRoles = List.of(getRole(RoleType.ROLE_USER).getId());
+        userService.saveUser(user, selectedRoles);
     }
 }

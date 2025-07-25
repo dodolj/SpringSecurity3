@@ -1,5 +1,6 @@
 package org.example.springsecurity4.controller;
 
+import org.example.springsecurity4.model.Role;
 import org.example.springsecurity4.model.User;
 import org.example.springsecurity4.service.RoleService;
 import org.example.springsecurity4.service.RoleServiceApi;
@@ -96,4 +97,11 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+    @PostMapping("/admin/create")
+    public String createUser(
+            @ModelAttribute User user,
+            @RequestParam(required = false) List<UUID> selectedRoles) {
+        userService.saveUser(user, selectedRoles);
+        return "redirect:/admin";
+    }
 }
