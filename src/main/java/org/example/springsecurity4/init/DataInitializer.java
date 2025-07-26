@@ -28,6 +28,7 @@ public class DataInitializer {
         this.roleRepository = roleRepository;
     }
 
+    //region pre-init methods
     @PostConstruct
     @Transactional
     public void init() {
@@ -57,6 +58,7 @@ public class DataInitializer {
         return roleRepository.findByName(roleType)
                 .orElseThrow(() -> new RuntimeException(roleType + " role not found"));
     }
+    //endregion
 
     private User createUser(String username, String rawPassword, List<Role> roles) {
         User user = new User();

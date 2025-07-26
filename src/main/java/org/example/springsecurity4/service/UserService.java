@@ -67,7 +67,6 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.joining(", "));
 
     }
-
     //endregion
 
     //region @Transactional
@@ -96,8 +95,6 @@ public class UserService implements UserDetailsService {
 
         userRepository.save(user);
     }
-
-
 
     @Transactional
     public void registerUser(User user) {

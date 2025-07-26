@@ -1,6 +1,5 @@
 package org.example.springsecurity4.controller;
 
-import org.example.springsecurity4.model.User;
 import org.example.springsecurity4.service.RoleServiceApi;
 import org.example.springsecurity4.service.UserService;
 import org.springframework.stereotype.Controller;

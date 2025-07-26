@@ -19,7 +19,7 @@ import java.util.UUID;
 public class AdminController {
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder; //outdated
     private final RoleServiceApi roleService;
 
     public AdminController(UserService userService,

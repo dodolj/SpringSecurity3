@@ -1,7 +1,6 @@
 package org.example.springsecurity4.model;
 
 import jakarta.persistence.*;
-import org.apache.logging.log4j.CloseableThreadContext;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.proxy.HibernateProxy;
@@ -12,8 +11,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.OffsetTime;
 import java.util.*;
 
 @Entity

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>User page</title>
@@ -23,9 +23,10 @@
         <!-- Sidebar -->
         <div class="col-md-2 bg-light min-vh-100 p-3">
             <ul class="nav flex-column">
-                <li class="nav-item mb-2" th:if="${#lists.contains(user.roles, 'ROLE_ADMIN')}">
+                <li class="nav-item mb-2" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link btn btn-secondary w-100" href="/admin">Admin</a>
                 </li>
+
                 <li class="nav-item mb-2">
                     <a class="nav-link active btn btn-primary w-100" href="/user">User</a>
                 </li>
