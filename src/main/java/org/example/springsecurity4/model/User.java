@@ -14,9 +14,7 @@ import java.time.Instant;
 import java.util.*;
 
 @Entity
-@Table(name = "users",
-        indexes = @Index(name = "idx_users_username", columnList = "username", unique = true),
-        uniqueConstraints = @UniqueConstraint(name = "uk_users_username", columnNames = "username"))
+@Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails {
 
@@ -27,6 +25,7 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Column (columnDefinition = "text")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -37,12 +36,10 @@ public class User implements UserDetails {
     private List<Role> roles = new ArrayList<>();
 
     @CreatedDate
-    @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     @CreationTimestamp
     private Instant createdAt;
 
     @LastModifiedDate
-    @Column(name = "updated_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
     @UpdateTimestamp
     private Instant updatedAt;
 
