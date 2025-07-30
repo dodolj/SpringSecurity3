@@ -11,7 +11,7 @@ public record GetUsersResponse(
     public record User(
             UUID id,
             String username,
-            List<UUID> roles,
+            List<UUID> roleIds,
             Instant createdAt,
             Instant updatedAt
     ) {
