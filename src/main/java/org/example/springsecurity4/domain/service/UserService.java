@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
-public class UserService implements UserDetailsService {
+public class UserService implements UserServiceApi {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -33,14 +33,17 @@ public class UserService implements UserDetailsService {
     }
 
     //region readOnly
+    @Override
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
+    @Override
     public User findById(UUID id) {
         return userRepository.findById(id).orElseThrow();
     }
 
+    @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -52,10 +55,12 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+    @Override
     public boolean userExists(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
 
+    @Override
     public String getRolesAsString(String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isEmpty()) {
@@ -71,12 +76,20 @@ public class UserService implements UserDetailsService {
 
     //region @Transactional
     @Transactional
+    @Override
     public void saveUser(User user, List<UUID> selectedRolesIds) {
         user.setRoles(new ArrayList<>(roleRepository.findAllById(selectedRolesIds)));
         userRepository.save(user);
     }
 
     @Transactional
+    @Override
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
+
+    @Transactional
+    @Override
     public void updateUser(User updatedUser, List<String> selectedRoles) {
         User user = userRepository.findById(updatedUser.getId())
                 .orElseThrow();
@@ -97,6 +110,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
+    @Override
     public void registerUser(User user) {
         if (userExists(user.getUsername())) {
             throw new IllegalArgumentException("Username already exists");
@@ -113,6 +127,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
+    @Override
     public void deleteById(UUID id){
         userRepository.deleteById(id);
     }

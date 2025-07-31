@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 @Component
-public class RoleBasedAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+public class RoleBasedAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -24,7 +24,7 @@ public class RoleBasedAuthenticationSuccessHandler extends SimpleUrlAuthenticati
                 .getAuthority().equals("ROLE_ADMIN"))) {
             getRedirectStrategy().sendRedirect(request, response, "/admin");
         } else {
-            getRedirectStrategy().sendRedirect(request, response, "/user");
+            getRedirectStrategy().sendRedirect(request, response, "/users");
         }
     }
 }

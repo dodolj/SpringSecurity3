@@ -21,12 +21,12 @@ public class UserController {
         this.roleServiceApi = roleServiceApi;
     }
 
-    @GetMapping("/user")
+    @GetMapping("/users")
     public String userPage(Model model, Principal principal) {
         model.addAttribute("user", userService.findByUsername(principal.getName()));
         model.addAttribute("currentUserEmail", principal.getName());
         model.addAttribute("currentUserRoles", userService.getRolesAsString(principal.getName()));
         model.addAttribute("allRoles", roleServiceApi.findAllRoles());
-        return "user";
+        return "users";
     }
 }

@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Component
-public class ManuallyUserMapper implements UserToGetUsersResponseUserMapper {
+public class ManuallyUserMapper implements User2GetUsersResponseUserMapper {
 
     @Override
     public GetUsersResponse.User toGetUsersResponseUser(User user) {
