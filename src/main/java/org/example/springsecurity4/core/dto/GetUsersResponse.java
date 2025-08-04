@@ -7,14 +7,11 @@ import java.util.UUID;
 public record GetUsersResponse(
         List<User> users
 ) {
-
     public record User(
             UUID id,
             String username,
             List<UUID> roleIds,
             Instant createdAt,
             Instant updatedAt
-    ) {
-
-    }
+    ){}
 }

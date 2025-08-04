@@ -1,0 +1,60 @@
+### 1. Login as admin
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin"
+}
+
+### 2. Get roles and save first two role UUIDs
+GET http://localhost:8080/api/users/roles
+Cookie: {{authCookie}}
+
+### 3. Create new user with saved roles
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "apitestuser",
+  "password": "apitestpass",
+  "roleIds": ["", ""]
+}
+
+### 4. Get user by ID
+GET http://localhost:8080/api/users/d33916d3-92b6-4dce-b8df-57729acbab78
+Cookie: JSESSIONID=382C45C073A442F3EE8112A433F001C5
+
+### 5. Update user
+PUT http://localhost:8080/api/users/
+Content-Type: application/json
+Cookie:
+
+{
+  "username": "apitestuser_updated",
+  "password": "apitestpass_updated",
+  "roleIds": [""]
+}
+
+### 6. Delete user
+DELETE http://localhost:8080/api/users/{{userId}}
+Cookie: {{authCookie}}
+
+### 7. Logout
+POST http://localhost:8080/api/auth/logout
+
+### 8. Login as user
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "user",
+  "password": "user"
+}
+
+### 4. Get user by ID 4 user
+GET http://localhost:8080/api/users/004fcac4-a1c9-4419-8bf3-1bdaa7b499c8
+Cookie: JSESSIONID=363A5A9B6AD07DE9278DEAC3CAD2A5A1
+
+### 9. Get roles
+GET http://localhost:8080/api/users/roles

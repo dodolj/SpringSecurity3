@@ -23,6 +23,8 @@ public interface UserServiceApi extends UserDetailsService {
 
     boolean userExists(String username);
 
+    boolean userExists(UUID id);
+
     String getRolesAsString(String username);
 
     //region @Transactional

@@ -43,6 +43,18 @@ public class User implements UserDetails {
     @UpdateTimestamp
     private Instant updatedAt;
 
+    public User(UUID uuid, String username, String password, List<Role> roles, Instant now, Instant now1) {
+        this.id = uuid;
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+        this.createdAt = now;
+        this.updatedAt = now1;
+    }
+
+    public User() {
+    }
+
     //region getter and setter
     public UUID getId() {
         return id;

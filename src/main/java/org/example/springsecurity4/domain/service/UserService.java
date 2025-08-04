@@ -61,6 +61,11 @@ public class UserService implements UserServiceApi {
     }
 
     @Override
+    public boolean userExists(UUID id) {
+        return userRepository.findById(id).isPresent();
+    }
+
+    @Override
     public String getRolesAsString(String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isEmpty()) {

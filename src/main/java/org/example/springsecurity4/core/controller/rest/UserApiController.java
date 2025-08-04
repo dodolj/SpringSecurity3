@@ -1,6 +1,8 @@
 package org.example.springsecurity4.core.controller.rest;
 
+import org.example.springsecurity4.core.dto.CreateUserRequest;
 import org.example.springsecurity4.core.dto.GetUsersResponse;
+import org.example.springsecurity4.core.dto.UpdateUserRequest;
 import org.example.springsecurity4.core.mapper.ManuallyUserMapper;
 import org.example.springsecurity4.core.mapper.User2GetUsersResponseUserMapper;
 import org.example.springsecurity4.domain.model.Role;
@@ -14,12 +16,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
-@PreAuthorize("hasRole('ADMIN')")
 public class UserApiController {
 
     private final UserServiceApi userServiceApi;
@@ -38,6 +40,7 @@ public class UserApiController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public GetUsersResponse getAllUsers() {
         return new GetUsersResponse(
                 userServiceApi.findAll().stream()
@@ -46,7 +49,8 @@ public class UserApiController {
         );
     }
 
-    @GetMapping
+    @GetMapping("/roles")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<RoleType> getAllRoles() {
         return roleServiceApi.findAllRoles()
                 .stream()
@@ -55,49 +59,47 @@ public class UserApiController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or #id.toString() == authentication.name")
-    public ResponseEntity<GetUsersResponse.User> getUserById(@PathVariable UUID id,
-                                                             Authentication auth) {
+    @PreAuthorize("hasRole('ADMIN') or #id.equals(authentication.principal.id)")
+    public ResponseEntity<GetUsersResponse.User> getUserById(@PathVariable UUID id) {
         User user = userServiceApi.findById(id);
-        if (!isAdmin(auth) && !user.getId().toString().equals(auth.getName())) {
-            return ResponseEntity.status(403).build();
-        }
-
         return ResponseEntity.ok(manuallyUserMapper.toGetUsersResponseUser(user));
     }
 
-    @PostMapping(value = "/clients")
-    public ResponseEntity<GetUsersResponse.User> createUser(@RequestBody User user) {
-        if (userServiceApi.userExists(user.getUsername())) {
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<GetUsersResponse.User> createUser(@RequestBody CreateUserRequest request) {
+        /*лучше throw exception
+        * return не response entity а сразу user без generics
+        * а exception перехватывать либо внизу контроллеров, с помощью @exceptionHandler (problemDetail)
+        * но чаще делают глобальный Exceptions перехватчик*/
+        if (userServiceApi.userExists(request.username())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
+        List<Role> roles = roleServiceApi.findAllById(request.roleIds());
+        User user = manuallyUserMapper.toDomainUser(request, roles);
         userServiceApi.saveUser(user);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(manuallyUserMapper.toGetUsersResponseUser(user));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<GetUsersResponse.User> updateUser(@PathVariable UUID id,
-                                                            @RequestBody User updatedUser) {
+                                                            @RequestBody UpdateUserRequest request) {
         User user = userServiceApi.findById(id);
-        if (userServiceApi.userExists(user.getUsername())) {
+        List<Role> roles = roleServiceApi.findAllById(request.roleIds());
+        manuallyUserMapper.updateUserFromRequest(user, request, roles);
+        userServiceApi.saveUser(user);
 
-            user.setUsername(updatedUser.getUsername());
-            user.setPassword(updatedUser.getPassword());
-            user.setRoles(updatedUser.getRoles());
-            user.setUpdatedAt(updatedUser.getUpdatedAt());
-            userServiceApi.saveUser(user);
-
-            return ResponseEntity.ok(manuallyUserMapper.toGetUsersResponseUser(user));
-        }
-        return ResponseEntity.status(451).build();
+        return ResponseEntity.ok(manuallyUserMapper.toGetUsersResponseUser(user));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
-        if (!userServiceApi.userExists(System.getProperty("user.name"))) {
+        if (!userServiceApi.userExists(id)) {
             return ResponseEntity.notFound().build();
         }
 
