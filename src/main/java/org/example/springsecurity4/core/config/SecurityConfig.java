@@ -45,7 +45,7 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .securityContextRepository(securityContextRepository())
-                        .loginPage("/api/login")
+                        .loginPage("/login")
                         .successHandler(successHandler)
                         .permitAll()
                 )

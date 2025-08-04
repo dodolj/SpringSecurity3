@@ -3,6 +3,7 @@ package org.example.springsecurity4.core.controller.rest;
 import org.example.springsecurity4.core.dto.CreateUserRequest;
 import org.example.springsecurity4.core.dto.GetUsersResponse;
 import org.example.springsecurity4.core.dto.UpdateUserRequest;
+import org.example.springsecurity4.core.exception.UserNameAlreadyExistException;
 import org.example.springsecurity4.core.mapper.ManuallyUserMapper;
 import org.example.springsecurity4.core.mapper.User2GetUsersResponseUserMapper;
 import org.example.springsecurity4.domain.model.Role;
@@ -11,11 +12,13 @@ import org.example.springsecurity4.domain.model.User;
 import org.example.springsecurity4.domain.service.RoleServiceApi;
 import org.example.springsecurity4.domain.service.UserServiceApi;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -73,7 +76,7 @@ public class UserApiController {
         * а exception перехватывать либо внизу контроллеров, с помощью @exceptionHandler (problemDetail)
         * но чаще делают глобальный Exceptions перехватчик*/
         if (userServiceApi.userExists(request.username())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            throw new UserNameAlreadyExistException(request.username());
         }
 
         List<Role> roles = roleServiceApi.findAllById(request.roleIds());
@@ -107,8 +110,18 @@ public class UserApiController {
         return ResponseEntity.noContent().build();
     }
 
-    public boolean isAdmin(Authentication authentication){
-        return authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    @ExceptionHandler(UserNameAlreadyExistException.class)
+    public ProblemDetail handlerException(UserNameAlreadyExistException ex) {
+        URI type = URI.create("urn://" + ex.getClass().getSimpleName());
+        String title = "Registration error";
+        String detail = "Username already exist";
+
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+
+        problemDetail.setType(type);
+        problemDetail.setTitle(title);
+        problemDetail.setDetail(detail);
+
+        return problemDetail;
     }
 }
