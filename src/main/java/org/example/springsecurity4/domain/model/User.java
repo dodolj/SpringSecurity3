@@ -1,13 +1,10 @@
 package org.example.springsecurity4.domain.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -37,11 +34,9 @@ public class User implements UserDetails {
     private List<Role> roles = new ArrayList<>();
 
     @CreatedDate
-    @CreationTimestamp
     private Instant createdAt;
 
     @LastModifiedDate
-    @UpdateTimestamp
     private Instant updatedAt;
 
     public User(UUID uuid, String username, String password, List<Role> roles, Instant now, Instant now1) {

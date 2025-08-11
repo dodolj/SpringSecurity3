@@ -11,11 +11,5 @@ public record CreateUserRequest(
         List<UUID> roleIds,
         Instant createdAt
 ) {
-    public CreateUserRequest(UUID userId, String username, String password, List<UUID> roleIds, Instant createdAt) {
-        this.userId = userId;
-        this.username = username;
-        this.password = password;
-        this.roleIds = roleIds;
-        this.createdAt = createdAt;
-    }
+
 }
