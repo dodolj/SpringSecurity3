@@ -9,4 +9,6 @@ public record UpdateUserRequest(
         String password,
         List<UUID> roleIds,
         Instant updatedAt
-) {}
+) {
+
+}

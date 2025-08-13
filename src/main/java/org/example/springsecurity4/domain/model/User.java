@@ -34,6 +34,7 @@ public class User implements UserDetails {
     private List<Role> roles = new ArrayList<>();
 
     @CreatedDate
+    @Column(updatable = false)
     private Instant createdAt;
 
     @LastModifiedDate

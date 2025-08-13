@@ -1,26 +1,21 @@
 package org.example.springsecurity4.core.controller.rest;
 
 import org.example.springsecurity4.core.dto.CreateUserRequest;
+import org.example.springsecurity4.core.dto.GetUserResponse;
 import org.example.springsecurity4.core.dto.GetUsersResponse;
 import org.example.springsecurity4.core.dto.UpdateUserRequest;
 import org.example.springsecurity4.core.exception.UserNameAlreadyExistException;
 import org.example.springsecurity4.core.mapper.ManuallyUserMapper;
-import org.example.springsecurity4.core.mapper.User2GetUsersResponseUserMapper;
-import org.example.springsecurity4.domain.model.Role;
-import org.example.springsecurity4.domain.model.RoleType;
+import org.example.springsecurity4.core.mapper.UserManagementService;
 import org.example.springsecurity4.domain.model.User;
-import org.example.springsecurity4.domain.service.RoleServiceApi;
 import org.example.springsecurity4.domain.service.UserServiceApi;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -28,75 +23,44 @@ import java.util.UUID;
 public class UserApiController {
 
     private final UserServiceApi userServiceApi;
-    private final User2GetUsersResponseUserMapper user2GetUsersResponseUserMapper;
-    private final RoleServiceApi roleServiceApi;
     private final ManuallyUserMapper manuallyUserMapper;
+    private final UserManagementService userManagementService;
 
     public UserApiController(UserServiceApi userServiceApi,
-                             User2GetUsersResponseUserMapper user2GetUsersResponseUserMapper,
-                             RoleServiceApi roleServiceApi,
-                             ManuallyUserMapper manuallyUserMapper) {
+                             ManuallyUserMapper manuallyUserMapper,
+                             UserManagementService userManagementService) {
         this.userServiceApi = userServiceApi;
-        this.user2GetUsersResponseUserMapper = user2GetUsersResponseUserMapper;
-        this.roleServiceApi = roleServiceApi;
         this.manuallyUserMapper = manuallyUserMapper;
+        this.userManagementService = userManagementService;
     }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public GetUsersResponse getAllUsers() {
-        return new GetUsersResponse(
-                userServiceApi.findAll().stream()
-                        .map(user2GetUsersResponseUserMapper::toGetUsersResponseUser)
-                        .toList()
-        );
+        var users = userServiceApi.findAll().stream()
+                .map(GetUserResponse::from)
+                .toList();
+        return new GetUsersResponse(users);
     }
 
-    @GetMapping("/roles")
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<RoleType> getAllRoles() {
-        return roleServiceApi.findAllRoles()
-                .stream()
-                .map(Role::getName)
-                .toList();
-    }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or #id.equals(authentication.principal.id)")
-    public ResponseEntity<GetUsersResponse.User> getUserById(@PathVariable UUID id) {
+    public ResponseEntity<GetUserResponse> getUserById(@PathVariable UUID id) {
         User user = userServiceApi.findById(id);
         return ResponseEntity.ok(manuallyUserMapper.toGetUsersResponseUser(user));
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<GetUsersResponse.User> createUser(@RequestBody CreateUserRequest request) {
-        /*лучше throw exception
-        * return не response entity а сразу user без generics
-        * а exception перехватывать либо внизу контроллеров, с помощью @exceptionHandler (problemDetail)
-        * но чаще делают глобальный Exceptions перехватчик*/
-        if (userServiceApi.userExists(request.username())) {
-            throw new UserNameAlreadyExistException(request.username());
-        }
-
-        List<Role> roles = roleServiceApi.findAllById(request.roleIds());
-        User user = manuallyUserMapper.toDomainUser(request, roles);
-        userServiceApi.saveUser(user);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(manuallyUserMapper.toGetUsersResponseUser(user));
+    public GetUserResponse createUser(@RequestBody CreateUserRequest request) {
+        return GetUserResponse.from(userManagementService.createUser(request));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<GetUsersResponse.User> updateUser(@PathVariable UUID id,
-                                                            @RequestBody UpdateUserRequest request) {
-        User user = userServiceApi.findById(id);
-        List<Role> roles = roleServiceApi.findAllById(request.roleIds());
-        manuallyUserMapper.updateUserFromRequest(user, request, roles);
-        userServiceApi.saveUser(user);
-
-        return ResponseEntity.ok(manuallyUserMapper.toGetUsersResponseUser(user));
+    public GetUserResponse updateUser(@PathVariable UUID id, @RequestBody UpdateUserRequest request) {
+        return GetUserResponse.from(userManagementService.updateUser(id, request));
     }
 
     @DeleteMapping("/{id}")

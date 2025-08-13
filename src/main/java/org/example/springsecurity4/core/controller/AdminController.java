@@ -3,7 +3,6 @@ package org.example.springsecurity4.core.controller;
 import org.example.springsecurity4.domain.model.User;
 import org.example.springsecurity4.domain.service.RoleServiceApi;
 import org.example.springsecurity4.domain.service.UserService;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 public class AdminController {
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder; //outdated
+    private final PasswordEncoder passwordEncoder;
     private final RoleServiceApi roleService;
 
     public AdminController(UserService userService,

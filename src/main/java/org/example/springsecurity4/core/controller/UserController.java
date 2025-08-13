@@ -1,32 +1,27 @@
 package org.example.springsecurity4.core.controller;
 
-import org.example.springsecurity4.domain.service.RoleServiceApi;
-import org.example.springsecurity4.domain.service.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.security.Principal;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/")
 public class UserController {
 
-    private final UserService userService;
-    private final RoleServiceApi roleServiceApi;
-
-    public UserController(UserService userService, RoleServiceApi roleServiceApi) {
-        this.userService = userService;
-        this.roleServiceApi = roleServiceApi;
-    }
-
     @GetMapping("/users")
-    public String userPage(Model model, Principal principal) {
-        model.addAttribute("user", userService.findByUsername(principal.getName()));
-        model.addAttribute("currentUserEmail", principal.getName());
-        model.addAttribute("currentUserRoles", userService.getRolesAsString(principal.getName()));
-        model.addAttribute("allRoles", roleServiceApi.findAllRoles());
+    public String userPage(Model model, Authentication authentication) {
+        var principal = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+        model.addAttribute("user", principal);
+        model.addAttribute("currentUserEmail", principal.getUsername());
+        model.addAttribute("currentUserRoles",
+                authentication.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.joining(", ")));
         return "users";
     }
 }

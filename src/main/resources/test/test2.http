@@ -8,7 +8,7 @@ Content-Type: application/json
 }
 
 ### 2. Get roles and save first two role UUIDs
-GET http://localhost:8080/api/users/roles
+GET http://localhost:8080/api/roles
 Cookie: {{authCookie}}
 
 ### 3. Create new user with saved roles
@@ -57,7 +57,7 @@ GET http://localhost:8080/api/users/004fcac4-a1c9-4419-8bf3-1bdaa7b499c8
 Cookie: JSESSIONID=363A5A9B6AD07DE9278DEAC3CAD2A5A1
 
 ### 9. Get roles
-GET http://localhost:8080/api/users/roles
+GET http://localhost:8080/api/roles
 
 
 ### Get all users
