@@ -1,0 +1,70 @@
+### 1. Логинимся админом
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin"
+}
+
+> {% client.global.set("admintoken", response.body.token); %}
+
+### 2. Логинимся обычным пользователем
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "user",
+  "password": "user"
+}
+
+> {% client.global.set("usertoken", response.body.token); %}
+
+### 3. Админ получает список ролей
+GET http://localhost:8080/api/roles
+Authorization: Bearer {{admintoken}}
+
+> {% client.global.set("roleId", response.body.roles[0].id); %}
+
+### 4. Админ создаёт пользователя
+POST http://localhost:8080/api/users
+Authorization: Bearer {{admintoken}}
+Content-Type: application/json
+
+{
+  "username": "newuser",
+  "password": "newpass",
+  "roleIds": ["{{roleId}}"]
+}
+
+> {% client.global.set("newUserId", response.body.id); %}
+
+### 5. Админ обновляет пользователя
+PUT http://localhost:8080/api/users/{{newUserId}}
+Authorization: Bearer {{admintoken}}
+Content-Type: application/json
+
+{
+  "username": "updateduser",
+  "roleIds": ["{{roleId}}"]
+}
+
+### 6. Обычный пользователь пробует зайти в /admin (должен быть 403)
+GET http://localhost:8080/admin
+Authorization: Bearer {{usertoken}}
+
+### 7. Админ заходит в /admin (200)
+GET http://localhost:8080/admin
+Authorization: Bearer {{admintoken}}
+
+### 8. Обычный пользователь получает список пользователей (если разрешено)
+GET http://localhost:8080/api/users
+Authorization: Bearer {{usertoken}}
+
+### 9. Logout для API
+POST http://localhost:8080/api/auth/logout
+Authorization: Bearer {{usertoken}}
+
+### 10. Logout для HTML-страниц
+POST http://localhost:8080/logout
+Authorization: Bearer {{usertoken}}

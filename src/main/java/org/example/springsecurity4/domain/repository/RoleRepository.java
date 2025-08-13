@@ -1,0 +1,16 @@
+package org.example.springsecurity4.domain.repository;
+
+import org.example.springsecurity4.domain.model.Role;
+import org.example.springsecurity4.domain.model.RoleType;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+public interface RoleRepository extends JpaRepository<Role, UUID> {
+
+    Optional<Role> findByName(RoleType name);
+
+    List<Role> findByNameIn(List<String> selectedRoles);
+}
